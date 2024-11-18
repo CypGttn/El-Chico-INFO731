@@ -1,0 +1,15 @@
+ifconfig eth0 1.2.3.1 netmask 255.255.255.0 up
+ifconfig eth1 5.5.5.1 netmask 255.255.255.0 up
+ifconfig eth2 5.5.6.7 netmask 255.255.255.0 up
+ifconfig eth3 5.5.7.8 netmask 255.255.255.0 up
+ifconfig eth4 5.5.8.9 netmask 255.255.255.0 up
+
+# Activer le forwarding IP
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+# Ajouter les règles NAT
+iptables -t nat -A POSTROUTING -o eth5 -j MASQUERADE
+
+# Permettre le trafic de retour
+iptables -A FORWARD -i eth5 -o eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i eth0 -o eth5 -j ACCEPT
