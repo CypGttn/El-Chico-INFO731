@@ -13,3 +13,8 @@ iptables -t nat -A POSTROUTING -o eth5 -j MASQUERADE
 # Permettre le trafic de retour
 iptables -A FORWARD -i eth5 -o eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT
 iptables -A FORWARD -i eth0 -o eth5 -j ACCEPT
+
+#Bloquer certains accès
+iptables -A OUTPUT -p icmp --icmp-type echo-request -d 142.251.37.196 -j DROP
+iptables -A INPUT -p icmp --icmp-type echo-reply -s 142.251.37.196 -j DROP
+
