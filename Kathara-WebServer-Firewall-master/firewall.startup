@@ -1,8 +1,8 @@
-ifconfig eth0 1.2.3.1 netmask 255.255.255.0 up
+ifconfig eth0 5.5.4.1 netmask 255.255.255.0 up
 ifconfig eth1 5.5.5.1 netmask 255.255.255.0 up
-ifconfig eth2 5.5.6.7 netmask 255.255.255.0 up
-ifconfig eth3 5.5.7.8 netmask 255.255.255.0 up
-ifconfig eth4 5.5.8.9 netmask 255.255.255.0 up
+ifconfig eth2 5.5.6.1 netmask 255.255.255.0 up
+ifconfig eth3 5.5.7.1 netmask 255.255.255.0 up
+ifconfig eth4 5.5.8.1 netmask 255.255.255.0 up
 
 # Activer le forwarding IP
 echo 1 > /proc/sys/net/ipv4/ip_forward
