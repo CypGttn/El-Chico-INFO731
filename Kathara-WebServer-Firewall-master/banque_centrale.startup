@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Configuration de l'interface réseau
+ifconfig eth0 5.5.7.2 netmask 255.255.255.0 up
+
+# Définir la passerelle par défaut pour accéder à internet via le firewall
+route add default gw 5.5.7.1 dev eth0
+
+# Configurer le serveur DNS pour la résolution des noms de domaine
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
