@@ -13,3 +13,6 @@ iptables -t nat -A POSTROUTING -o eth5 -j MASQUERADE
 # Permettre le trafic de retour
 iptables -A FORWARD -i eth5 -o eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT
 iptables -A FORWARD -i eth0 -o eth5 -j ACCEPT
+
+# Configuration DNS pour la résolution des noms
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
