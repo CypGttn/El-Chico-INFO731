@@ -3,6 +3,9 @@ import socket
 import subprocess
 from urllib.parse import urlparse
 
+# Liste des IP des utilisateurs autorisés à accéder aux sites bloqués
+allowed_ips = {"5.5.7.2", "5.5.8.2"}
+
 # Fonction pour obtenir l'IP d'une URL
 def get_ip_from_url(url):
     try:
@@ -22,20 +25,33 @@ def get_ip_from_url(url):
         print(f"Erreur inattendue lors de la résolution pour {url}: {e}")
         return None
 
+# Fonction pour ajouter une exception pour les IP autorisées
+def add_allow_rule(ip):
+    try:
+        # Ajouter une règle pour autoriser les utilisateurs à accéder à l'IP
+        for allowed_ip in allowed_ips:
+            subprocess.run(
+                ["iptables-legacy", "-A", "FORWARD", "-s", allowed_ip, "-d", ip, "-j", "ACCEPT"],
+                check=True
+            )
+            print(f"Exception ajoutée : {allowed_ip} peut accéder à {ip}")
+    except subprocess.CalledProcessError as e:
+        print(f"Erreur lors de l'ajout de l'exception pour {ip}: {e}")
+    except Exception as e:
+        print(f"Erreur inattendue lors de l'ajout de l'exception pour {ip}: {e}")
+
 # Fonction pour bloquer l'IP avec iptables
 def block_ip(ip):
     try:
-        # Bloquer l'IP avec iptables
-        #subprocess.run(["iptables-legacy", "-A", "OUTPUT", "-s", ip, "-j", "DROP"], check=True)
-        #subprocess.run(["iptables-legacy", "-A", "INPUT", "-s", ip, "-j", "DROP"], check=True)
-        subprocess.run(["iptables-legacy", "-A", "FORWARD", "-s", ip, "-j", "DROP"], check=True)
+        # Bloquer l'IP avec iptables (si aucune exception n'est en place)
+        subprocess.run(["iptables-legacy", "-A", "FORWARD", "-d", ip, "-j", "REJECT"], check=True)
         print(f"Site avec IP {ip} bloqué.")
     except subprocess.CalledProcessError as e:
         print(f"Erreur lors du blocage de l'IP {ip}: {e}")
     except Exception as e:
         print(f"Erreur inattendue lors du blocage de l'IP {ip}: {e}")
 
-# Lire le fichier CSV et bloquer les sites
+# Lire le fichier CSV et appliquer les règles
 with open('blocked_sites.csv', newline='') as csvfile:
     reader = csv.reader(csvfile)
     next(reader)  # Ignore la première ligne d'en-têtes
@@ -50,6 +66,8 @@ with open('blocked_sites.csv', newline='') as csvfile:
         ip = get_ip_from_url(url)
         
         if ip:
+            # Ajouter des exceptions pour les IP autorisées
+            add_allow_rule(ip)
             # Bloquer l'IP
             block_ip(ip)
         else:
