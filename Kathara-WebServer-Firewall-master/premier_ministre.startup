@@ -8,3 +8,6 @@ route add default gw 5.5.8.1 dev eth0
 
 # Configurer le serveur DNS pour la résolution des noms de domaine
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
+# Activer le forwarding IP
+echo 1 > /proc/sys/net/ipv4/ip_forward
