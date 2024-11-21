@@ -26,8 +26,9 @@ def get_ip_from_url(url):
 def block_ip(ip):
     try:
         # Bloquer l'IP avec iptables
-        subprocess.run(["iptables-legacy", "-A", "OUTPUT", "-s", ip, "-j", "DROP"], check=True)
-        subprocess.run(["iptables-legacy", "-A", "INPUT", "-s", ip, "-j", "DROP"], check=True)
+        #subprocess.run(["iptables-legacy", "-A", "OUTPUT", "-s", ip, "-j", "DROP"], check=True)
+        #subprocess.run(["iptables-legacy", "-A", "INPUT", "-s", ip, "-j", "DROP"], check=True)
+        subprocess.run(["iptables-legacy", "-A", "FORWARD", "-s", ip, "-j", "DROP"], check=True)
         print(f"Site avec IP {ip} bloqué.")
     except subprocess.CalledProcessError as e:
         print(f"Erreur lors du blocage de l'IP {ip}: {e}")
