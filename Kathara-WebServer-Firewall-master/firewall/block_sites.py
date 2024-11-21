@@ -51,7 +51,7 @@ def block_ip(ip):
     except Exception as e:
         print(f"Erreur inattendue lors du blocage de l'IP {ip}: {e}")
 
-# Lire le fichier CSV et appliquer les règles
+# Lire le fichier CSV contenant des sites à bloquer et appliquer les règles
 with open('blocked_sites.csv', newline='') as csvfile:
     reader = csv.reader(csvfile)
     next(reader)  # Ignore la première ligne d'en-têtes
@@ -72,3 +72,32 @@ with open('blocked_sites.csv', newline='') as csvfile:
             block_ip(ip)
         else:
             print(f"Impossible de résoudre l'IP pour {url}")
+
+
+# Lire le fichier CSV contenant TOUS les sites et le fichier CSV contenant des mot à bannir
+with open('all_sites.csv', newline='') as all_sites, open('swearWords.csv', newline='') as swear_words:
+    reader1 = csv.reader(all_sites)
+    reader2 = csv.reader(swear_words)
+    next(reader1)  # Ignore la première ligne d'en-têtes
+    next(reader2)  # Ignore la première ligne d'en-têtes
+    # Traitement des deux fichiers CSV
+    for row1 in reader1:
+        url = row[0].strip()  # Enlever les espaces autour de l'URL
+        if not url:
+            continue  # Ignore les lignes vides
+
+        done = False 
+        while not done:
+            for swear_word in reader2:
+                if swear_word in url:
+                    # Résoudre l'IP de l'URL
+                    ip = get_ip_from_url(url)
+                    if ip:
+                        # Ajouter des exceptions pour les IP autorisées
+                        add_allow_rule(ip)
+                        # Bloquer l'IP
+                        block_ip(ip)
+                    else:
+                        print(f"Impossible de résoudre l'IP pour {url}")
+                    done = True
+            done = True
