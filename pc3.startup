@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Configuration de l'interface réseau
+ifconfig eth0 5.5.6.2 netmask 255.255.255.0 up
+
+# Ajouter une route par défaut via le firewall (eth1 de firewall : 5.5.5.1)
+route add default gw 5.5.6.1 dev eth0
+
+# Configuration DNS pour la résolution des noms
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
+# Activer le suivi des connexions en arrière plan
+python3 /shared/suivi_connexions.py pc3 > /shared/pc3_connections.log &
