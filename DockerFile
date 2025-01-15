@@ -1,0 +1,18 @@
+# Utiliser l'image de base Kathara
+FROM kathara/base
+
+# Mettre à jour les paquets et installer Python, pip, et les dépendances nécessaires
+RUN apt-get update && apt-get install -y \
+    python3 \
+    build-essential \
+    curl \
+    && apt-get clean
+
+# Afficher des détails de débogage pour curl
+RUN curl -v https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3 get-pip.py
+
+# Installer scapy
+RUN pip3 install --no-cache-dir scapy
+
+# Commande par défaut pour démarrer un shell (facultatif)
+CMD ["bash"]

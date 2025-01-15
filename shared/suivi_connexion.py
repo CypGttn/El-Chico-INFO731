@@ -39,3 +39,8 @@ def start_packet_capture():
 
 # Lancer la capture des paquets (en arrière-plan)
 start_packet_capture()
+
+"""
+TODO :
+DockerFile pour installer scapy + plus tard librairie pour la bdd
+problème mise à jour de  pip"""
